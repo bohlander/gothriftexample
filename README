@@ -1,0 +1,20 @@
+Borrowed from https://groups.google.com/forum/#!msg/golang-nuts/RB_74QEtu1g/9nLAMhC95coJ -- thanks Justin!
+
+First, build thrift from source. Make sure you dont have it installed via homebrew.
+As of 0.9.1 it will generate incorrect Go code, at least for me.
+
+Install thrift Go lib:
+
+    go get -v github.com/apache/thrift/lib/go/thrift
+
+Then build the compiler from tip. I have found that 0.9.1 compiler does not generate working Go code for me
+
+   cd $GOPATH/src/github.com/apache/thrift
+   ./configure
+   cd compiler/cpp && make && cp -v thrift $GOHOME/bin/thrift-1.0
+
+Then, to generate the thrift stubs, run:
+
+   thrift-1.0 --gen go:thrift_import=github.com/apache/thrift/lib/go/thrift,package=multiply --out . multiply.thrift
+
+Finally, you should be able to build the server in the server dir.
